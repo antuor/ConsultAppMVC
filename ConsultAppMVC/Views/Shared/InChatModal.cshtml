@@ -1,0 +1,40 @@
+﻿@*@model Microsoft.AspNetCore.Identity.IdentityUser*@
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h4>Введите данные пациента</h4>
+        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+    </div>
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+            <dt>ФИО пациента</dt>
+            <dd>Сельченков Михаил Васильевич</dd>
+            <dt>Дата рождения</dt>
+            <dd>6 Июня 1980</dd>
+            <dt>Пол</dt>
+            <dd>Мужской</dd>
+            <dt>Жалобы</dt>
+            <dd>В течение 2 лет отмечает «жгучие» боли за грудиной при ходьбе на большие расстояния, проходящие через несколько минут при остановке.</dd>
+            <dt>Анамнез</dt>
+            <dd>
+                В течение года отмечает повышение АД до 190/110 мм.рт.ст, обычно бессимптомное, редко – сопровождается головной болью, носовыми кровотечениями, головокружением.
+                ЭКГ 01.10.18. Положение ЭОС – нормальное; Ритм – фибрилляция предсердий тахисистолия желудочков. Гипертрофия левого желудочка. Недостаточность кровоснабжения миокарда субэндокардиальных отделов диффузного характера, преимущественно в области боковой стенки, области верхушки.
+            </dd>
+            <dt>Объективно</dt>
+            <dd>Общее состояние средней тяжести. В сознании, адекватен, ориентирован, доступен продуктивному контакту. Кожные покровы, видимые слизистые обычной окраски, обычной влажности. Умеренного питания. Цианоза нет. Пастозность голеней и стоп. Грудная клетка правильной формы.</dd>
+            <dt>Сопроводительные документы </dt>
+            <dd><input name="myFile" type="file" multiple></dd>
+            <dd>
+                <a target="_blank" href="attachments/discharge_20171020.docx"><img src="/attachments/mm.png" style="width:32px" runat="server"></a> - Выписка из истории болезни
+                <br>
+                <a target="_blank" href="attachments/usi_20181020.pdf"><img src="/attachments/mm.png" style="width:32px" runat="server"></a> - Протокол УЗИ-исследования грудной клетки от 21.01.2021
+                <br>
+                <a target="_blank" href="attachments/fluo_20181015.jpg"><img src="/attachments/fluo_20181015.jpg" style="width:32px" runat="server"></a> - Флюорограмма грудной клетки от 19.01.2021
+                <br>
+                <a target="_blank" href="attachments/CT_20181010.dicom"><img src='<%=Page.ResolveUrl(‘~/attachments/mm.png’) %>' style="width:32px"></a> - КТ грудной клетки от 21.10.2021
+                <br>
+            </dd>
+            <dd><button type="submit" class="btn btn-primary" @*asp-action="CreatePrivateRoom" asp-route-userId="@Model.Id"*@>Завершить консультацию</button></dd>
+        </dl>
+    </div>
+</div>

@@ -1,0 +1,130 @@
+﻿@model Chat
+
+<body onload="ScrollToBottom()">
+    <div class="jumbotron bg-light">
+        <div id="modDialog" class="modal fade">
+            <div id="dialogContent" class="modal-dialog"></div>
+        </div>
+        <div style="z-index: 1000" id="chat_info">
+            @Html.ActionLink("Просмотр информации", "InChatModal",
+              new { id = 2 }, new { @class = "chatItem" })
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="chat">
+                @if (Model != null)
+                {
+                    @foreach (var message in Model.Messages)
+                    {
+                        string containerClass, timePosition, textAlign, contcolor, offset;
+                        if (User.Identity.Name == message.Name)
+                        {
+                            containerClass = "container darker";
+                            timePosition = "time-right text-light";
+                            textAlign = "text-left text-white";
+                            contcolor = "bg-primary";
+                            offset = "";
+                        }
+                        else
+                        {
+                            containerClass = "container";
+                            timePosition = "time-right";
+                            textAlign = "text-left";
+                            contcolor = "bg-light";
+                            offset = "";
+                        }
+
+                        <div class="row">
+                            <div class="@offset">
+                                <div class="@containerClass @contcolor">
+                                    <p class="sender @textAlign">@message.Name:</p>
+                                    <p class="@textAlign text-break">@message.Text</p>
+                                    <span class="@timePosition">@message.Timestamp</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-md-12" style="z-index: 1000" id="chat_input">
+            <form class="chat-input" onsubmit="sendMessage(event); ScrollToBottom()">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="roomId" value="@Model.Id">
+                <div class="form-group row">
+                    <textarea name="message" rows="1" id="message-input" class="auto_height form-control" oninput="auto_height(this)" required></textarea>
+                    <button type="submit" class="btn-primary">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+@section scripts {
+    <script src="~/js/signalr.min.js"></script>
+    <script src="~/js/messageBuilder.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .build();
+    var _connectionId = '';
+    connection.on("RecieveMessage", function (data) {
+
+        var message = messageBuilder()
+            .createMessage()
+            .withHeader(data.name)
+            .withParagraph(data.text)
+            .withFooter(data.timestamp)
+            .build();
+        document.querySelector('#chat').append(message);
+    })
+    connection.start()
+        .then(function () {
+            connection.invoke('joinRoom', '@Model.Id');
+        })
+        .catch(function (err) {
+            console.log(err)
+        })
+    window.addEventListener('onunload', function () {
+        connection.invoke('leaveRoom', '@Model.Id');
+    })
+        var sendMessage = function (event) {
+        event.preventDefault();
+        var data = new FormData(event.target);
+        document.getElementById('message-input').value = '';
+        axios.post('/Home/SendMessage', data)
+            .then(res => {
+                console.log("Message Sent!")
+            })
+            .catch(err => {
+                console.log("Failed to send message!")
+            })
+    }
+    </script>
+    <script>
+        function auto_height(elem) {
+            elem.style.height = "1px";
+            elem.style.height = (elem.scrollHeight) + "px";
+        }
+    </script>
+    <script>
+        function ScrollToBottom() {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    </script>
+    <script type="text/javascript">
+
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".chatItem").click(function (e) {
+
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+    </script>
+}

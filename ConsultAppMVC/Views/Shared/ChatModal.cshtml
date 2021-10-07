@@ -1,0 +1,30 @@
+﻿@*@model Microsoft.AspNetCore.Identity.IdentityUser*@
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h4>Введите данные пациента</h4>
+        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+    </div>
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+            <dt>ФИО пациента</dt>
+            <dd><input type="text" class="form-control" placeholder="ФИО пациента" required></dd>
+            <dt>Дата рождения</dt>
+            <dd><input type="date" class="form-control" placeholder="Дата рождения" required></dd>
+            <dt>Пол</dt>
+            <dd>
+                <select>
+                    <option>Мужской</option>
+                    <option>Женский</option>
+                </select>
+            </dd>
+            <dt>Жалобы</dt>
+            <dd><textarea type="text" rows="1" class="form-control" placeholder="Жалобы" oninput="auto_height(this)" required></textarea></dd>
+            <dt>Анамнез</dt>
+            <dd><textarea type="text" rows="1" class="form-control" placeholder="Анамнез" oninput="auto_height(this)" required></textarea></dd>
+            <dt>Объективно</dt>
+            <dd><textarea type="text" rows="1" class="form-control" placeholder="Объективно" oninput="auto_height(this)" required></textarea></dd>
+            <dd><button type="submit" class="btn btn-primary" @*asp-action="CreatePrivateRoom" asp-route-userId="@Model.Id"*@>Сохранить и продолжить</button></dd>
+        </dl>
+    </div>
+</div>
